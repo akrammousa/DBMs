@@ -23,7 +23,8 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public boolean executeStructureQuery(String query) throws SQLException {
-		// TODO Auto-generated method stub
+		final ChooseStatment statment = new ChooseStatment(query);
+		statment.excute();
 		return false;
 	}
 
