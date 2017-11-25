@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.db.cs14;
 
+import java.beans.XMLEncoder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -12,6 +13,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
 
 public class LoadStax {
 	public static void main(String[] args) throws XMLStreamException, IOException {

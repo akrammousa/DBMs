@@ -10,6 +10,6 @@ public class Statement {
 		this.currentDataBase = currenrDataBase;
 	}
 
-	public void excute() {
+	public void excute() throws Exception {
 	}
 }
