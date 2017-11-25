@@ -2,22 +2,14 @@ package eg.edu.alexu.csd.oop.db.cs14;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.StringWriter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
 public class Create extends Statement {
-	
-	
 
-	
 	private static final Exception SQLException = null;
 
 	public Create(String[] querySplited, String currentDataBase) {
@@ -31,64 +23,76 @@ public class Create extends Statement {
 			final File f = new File(super.currentDataBase);
 			f.mkdir();
 		} else if (super.querySplited[1].equalsIgnoreCase("table")) {
-
-			createTable(Arrays
-					.toString(Arrays.copyOfRange(super.querySplited, 2,
-							super.querySplited.length - 1)));
+			System.out.println(Arrays.copyOfRange(super.querySplited, 2, super.querySplited.length - 1).toString());
+			final StringBuilder st = new StringBuilder();
+			for (int i = 2; i < querySplited.length; i++) {
+				st.append(querySplited[i] + " ");
+			}
+			final String test = st.toString();
+			createTable(test);
 
 		}
 
 	}
 
 	private void createTable(String columns) throws Exception {
-		ArrayList<String> ColumnNames = new ArrayList<>();
+		columns = columns.replaceAll("\\);", " ");
+		final ArrayList<String> ColumnNames = new ArrayList<>();
 
-		String[] strings = columns.split("(", 2);
+		String[] strings = columns.split("\\(");
 
-		String tableName = strings[0].trim();
+		final String tableName = strings[0].trim();
 
-		CheckTable(tableName);
-		StringWriter stringWriter = new StringWriter();
-		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		final XMLStreamWriter writer = factory.createXMLStreamWriter(stringWriter);
-		writer.writeStartDocument();
-		writer.writeStartElement(tableName);
-		writer.writeStartElement("columns");
-		strings = strings[1].split(",");
-		writer.writeAttribute("count", String.valueOf(strings.length));
+		final File table = CheckTable(tableName);
+		try {
+			final FileWriter stringWriter = new FileWriter(table);
+			final XMLOutputFactory factory = XMLOutputFactory.newInstance();
+			final XMLStreamWriter writer = factory.createXMLStreamWriter(stringWriter);
+			writer.writeStartDocument();
+			writer.writeStartElement(tableName);
+			writer.writeStartElement("columns");
+			strings[1].trim();
+			strings = strings[1].split(",");
+			writer.writeAttribute("count", String.valueOf(strings.length));
 
-		for (int i = 0; i < strings.length; i++) {
+			for (int i = 0; i < strings.length; i++) {
 
-			String[] column = strings[i].split(" ", 2);
-			strings[1].replaceAll(");", " ");
-			String name = column[0].trim() ;
-			if(!ColumnNames.contains(name)){
-			ColumnNames.add(name);
-			writer.writeStartElement(name);
-			writer.writeAttribute( "type", column[1].trim() );
-			writer.writeEndElement();
+				final String[] column = strings[i].split(" ", 2);
+
+				final String name = column[0].trim() ;
+				if(!ColumnNames.contains(name)){
+					ColumnNames.add(name);
+					writer.writeStartElement(name);
+					writer.writeAttribute( "type", column[1].trim() );
+					writer.writeEndElement();
+				}
+
 			}
-
+			writer.writeEndElement();
+			writer.writeStartElement("elements");
+			writer.writeEndElement();
+			writer.writeEndDocument();
+			writer.flush();
+			writer.close();
+			stringWriter.close();
 		}
-		writer.writeEndElement();
-		writer.writeStartElement("elements");
-		writer.writeEndDocument();
-		
-		
+		catch (final Exception e) {
+			// TODO: handle exception
+		}
+
+
 
 	}
 
-	private void CheckTable(String tableName) throws Exception {
-		//check from the keywords
-		File table = new File(super.currentDataBase + tableName + ".xml");
+	private File CheckTable(String tableName) throws Exception {
+		// check from the keywords
+		final File table = new File(super.currentDataBase + "\\" + tableName + ".xml");
 		if (table.exists()) {
 			throw SQLException;
 		}
 		table.createNewFile();
+		return table ;
 
-		
 	}
-	
-	
 
 }

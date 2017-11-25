@@ -14,33 +14,26 @@ public class DataBaseImpl implements Database {
 		this.currentDataBase = databaseName;
 		if (f.exists()) {
 			if (dropIfExists) {
-				//f.delete();
-				//f.mkdir();
-				try {
-					executeStructureQuery("DROP DATABASE " + databaseName);
-					executeStructureQuery("CREATE DATABASE " + databaseName);
-				} catch (final SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				executeStructureQuery("DROP DATABASE " + databaseName);
+				executeStructureQuery("CREATE DATABASE " + databaseName);
 			}
 		}
 		else {
-			try {
-				executeStructureQuery("CREATE DATABASE " + databaseName);
-			} catch (final SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			executeStructureQuery("CREATE DATABASE " + databaseName);
 		}
 		this.currentDataBase = f.getAbsolutePath();
 		return f.getAbsolutePath();
 	}
 
 	@Override
-	public boolean executeStructureQuery(String query) throws SQLException {
+	public boolean executeStructureQuery(String query) {
 		final ChooseStatement statment = new ChooseStatement(query, currentDataBase);
-		statment.createStatement();
+		try {
+			statment.createStatement();
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 
