@@ -12,13 +12,13 @@ public class Drop extends Statement  {
 
 	@Override
 	public void excute() throws Exception {
-		super.excute();
 		if (super.querySplited[1].equalsIgnoreCase("database")) {
-			final File f = new File(super.currentDataBase);
-			f.delete();
+			final File f = new File(super.querySplited[2]);
+			
 		} else if (super.querySplited[1].equalsIgnoreCase("table")) {
 
-			final File f = new File(super.currentDataBase + super.querySplited[2] +".xml");
+			final File f = new File(super.currentDataBase +
+					"\\" + super.querySplited[2] +".xml");
 			f.delete();
 
 		}
