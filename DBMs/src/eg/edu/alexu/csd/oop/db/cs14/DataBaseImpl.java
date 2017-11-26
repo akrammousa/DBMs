@@ -10,19 +10,23 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
-		final File f = new File(databaseName);
-		this.currentDataBase = databaseName;
+		if(!new File("DataBases").exists()){
+			final File file = new File("DataBases");
+			file.mkdir();
+		}
+		this.currentDataBase = "DataBases" + "\\" + databaseName;
+		final File f = new File(this.currentDataBase);
 		if (f.exists()) {
 			if (dropIfExists) {
-				executeStructureQuery("DROP DATABASE " + databaseName);
-				executeStructureQuery("CREATE DATABASE " + databaseName);
+				executeStructureQuery("DROP DATABASE " + "DataBases" + "\\" + databaseName);
+				executeStructureQuery("CREATE DATABASE " + "DataBases" + "\\" +  databaseName);
 			}
 		}
 		else {
-			executeStructureQuery("CREATE DATABASE " + databaseName);
+			executeStructureQuery("CREATE DATABASE " + this.currentDataBase);
 		}
-		this.currentDataBase = f.getAbsolutePath();
-		return f.getAbsolutePath();
+		this.currentDataBase = f.getPath();
+		return currentDataBase;
 	}
 
 	@Override
