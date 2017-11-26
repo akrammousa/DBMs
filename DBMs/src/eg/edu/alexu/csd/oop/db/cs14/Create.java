@@ -10,6 +10,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 public class Create extends Statement {
 
+	private boolean result;
 	private static final Exception SQLException = null;
 
 	public Create(String[] querySplited, String currentDataBase) {
@@ -17,11 +18,11 @@ public class Create extends Statement {
 	}
 
 	@Override
-	public void excute() throws Exception {
+	public Object excute() throws Exception {
 		if (super.querySplited[1].equalsIgnoreCase("database")) {
 			System.out.println(super.currentDataBase);
 			final File f = new File(super.currentDataBase);
-			f.mkdir();
+			return (f.mkdir());
 		} else if (super.querySplited[1].equalsIgnoreCase("table")) {
 			System.out.println(Arrays.copyOfRange(super.querySplited, 2, super.querySplited.length - 1).toString());
 			final StringBuilder st = new StringBuilder();
@@ -29,13 +30,13 @@ public class Create extends Statement {
 				st.append(querySplited[i] + " ");
 			}
 			final String test = st.toString();
-			createTable(test);
+			return createTable(test);
 
 		}
-
+		return false;
 	}
 
-	private void createTable(String columns) throws Exception {
+	private boolean createTable(String columns) throws Exception {
 		columns = columns.replaceAll("\\);", " ");
 		final ArrayList<String> ColumnNames = new ArrayList<>();
 
@@ -44,43 +45,44 @@ public class Create extends Statement {
 		final String tableName = strings[0].trim();
 
 		final File table = CheckTable(tableName);
-		try {
-			final FileWriter stringWriter = new FileWriter(table);
-			final XMLOutputFactory factory = XMLOutputFactory.newInstance();
-			final XMLStreamWriter writer = factory.createXMLStreamWriter(stringWriter);
-			writer.writeStartDocument();
-			writer.writeStartElement(tableName);
-			writer.writeStartElement("columns");
-			strings[1].trim();
-			strings = strings[1].split(",");
-			writer.writeAttribute("count", String.valueOf(strings.length));
+		if (result) {
+			try {
+				final FileWriter stringWriter = new FileWriter(table);
+				final XMLOutputFactory factory = XMLOutputFactory.newInstance();
+				final XMLStreamWriter writer = factory.createXMLStreamWriter(stringWriter);
+				writer.writeStartDocument();
+				writer.writeStartElement(tableName);
+				writer.writeStartElement("columns");
+				strings[1].trim();
+				strings = strings[1].split(",");
+				writer.writeAttribute("count", String.valueOf(strings.length));
 
-			for (int i = 0; i < strings.length; i++) {
+				for (int i = 0; i < strings.length; i++) {
 
-				final String[] column = strings[i].split(" ", 2);
+					final String[] column = strings[i].split(" ", 2);
 
-				final String name = column[0].trim() ;
-				if(!ColumnNames.contains(name)){
-					ColumnNames.add(name);
-					writer.writeStartElement(name);
-					writer.writeAttribute( "type", column[1].trim() );
-					writer.writeEndElement();
+					final String name = column[0].trim();
+					if (!ColumnNames.contains(name)) {
+						ColumnNames.add(name);
+						writer.writeStartElement(name);
+						writer.writeAttribute("type", column[1].trim());
+						writer.writeEndElement();
+					}
+
 				}
-
+				writer.writeEndElement();
+				writer.writeStartElement("elements");
+				writer.writeEndElement();
+				writer.writeEndDocument();
+				writer.flush();
+				writer.close();
+				stringWriter.close();
+			} catch (final Exception e) {
+				// TODO: handle exception
 			}
-			writer.writeEndElement();
-			writer.writeStartElement("elements");
-			writer.writeEndElement();
-			writer.writeEndDocument();
-			writer.flush();
-			writer.close();
-			stringWriter.close();
-		}
-		catch (final Exception e) {
-			// TODO: handle exception
-		}
 
-
+		}
+		return result;
 
 	}
 
@@ -88,10 +90,12 @@ public class Create extends Statement {
 		// check from the keywords
 		final File table = new File(super.currentDataBase + "\\" + tableName + ".xml");
 		if (table.exists()) {
-			throw SQLException;
+			result = false;
+		} else {
+			table.createNewFile();
+			result = true;
 		}
-		table.createNewFile();
-		return table ;
+		return table;
 
 	}
 

@@ -11,10 +11,11 @@ public class Test {
 
 	public static void main(String[] args) throws SQLException {
 
-
 		DataBaseImpl test = new DataBaseImpl();
 		test.createDatabase("csed", false);
-		test.executeQuery("insert into test1 (id,name) values ('70','nemo');");
+		test.executeQuery("Insert into test1 (id , name , photo ) values ('45' , 'dwidar' , '56541')");
+		test.executeQuery("UPDATE test1 SET name = 'youmna' "
+				+ "WHERE id = 72;");
 
 	}
 

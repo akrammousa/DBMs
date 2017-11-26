@@ -10,17 +10,18 @@ public class Drop extends Statement  {
 	}
 
 	@Override
-	public void excute() throws Exception {
+	public Object excute() throws Exception {
 		if (super.querySplited[1].equalsIgnoreCase("database")) {
 			final File f = new File(currentDataBase);
-			deleteDir(f);
+			return (deleteDir(f));
 		} else if (super.querySplited[1].equalsIgnoreCase("table")) {
 
 			final File f = new File(super.currentDataBase +
 					"\\" + super.querySplited[2] +".xml");
-			f.delete();
+			return(f.delete());
 
 		}
+		return false ;
 	}
 	public static boolean deleteDir(File dir) {
 		if (dir.isDirectory()) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +21,7 @@ public class Delete extends Statement {
 	private static final Exception SQLClientInfoException = null;
 	private ArrayList<String> columnsNeeded;
 	private boolean deleteAllTable;
-	private final ArrayList<Map<String, String>> Results = new ArrayList<>();
-	private Condition[] conditonsArray;
-	private char operation;
+	private int result ;
 	private HandleCondition handler ;
 
 	public Delete(String[] querySplited, String currentDataBase) {
@@ -31,7 +30,8 @@ public class Delete extends Statement {
 	}
 
 	@Override
-	public void excute() throws Exception {
+	public Object excute() throws Exception {
+		result = 0;
 		final StringBuilder st = new StringBuilder();
 		for (int i = 1; i < querySplited.length; i++) {
 
@@ -58,9 +58,11 @@ public class Delete extends Statement {
 
 		}
 		Iterate(file);
+		return result ;
+
 
 	}
-	private void Iterate(File file) throws FileNotFoundException, XMLStreamException {
+	private void Iterate(File file) throws XMLStreamException, IOException {
 		boolean writeColumns = false;
 		boolean writeElement = false;
 		final String temp = file.getAbsolutePath();
@@ -69,7 +71,8 @@ public class Delete extends Statement {
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		final XMLEventWriter writer = factory.createXMLEventWriter(new FileOutputStream(new File(temp)));
+		FileOutputStream output = new FileOutputStream(new File(temp));
+		final XMLEventWriter writer = factory.createXMLEventWriter(output);
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(tempFile));
 
 		while (eventReader.hasNext()) {
@@ -121,6 +124,7 @@ public class Delete extends Statement {
 					final boolean put = handler.checkCondition(elementMap);
 
 					if(put){
+						result ++ ;
 					}
 					else{
 						writer.add(eventFactory.createStartElement("", null,"element"));
@@ -177,6 +181,7 @@ public class Delete extends Statement {
 
 		}
 		writer.close();
+		output.close();
 		tempFile.delete();
 
 

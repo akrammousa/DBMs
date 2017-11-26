@@ -25,7 +25,7 @@ public class Insert extends Statement {
 	}
 
 	@Override
-	public void excute() throws Exception {
+	public Object excute() throws Exception {
 
 		super.excute();
 		Boolean writeColumns = false;
@@ -46,7 +46,8 @@ public class Insert extends Statement {
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		final XMLEventWriter writer = factory.createXMLEventWriter(new FileOutputStream(new File(temp)));
+		FileOutputStream output = new FileOutputStream(new File(temp));
+		final XMLEventWriter writer = factory.createXMLEventWriter(output);
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(tempFile));
 
 		while (eventReader.hasNext()) {
@@ -72,7 +73,9 @@ public class Insert extends Statement {
 						final String column = TableColumns.get(i).trim();
 						writer.add(eventFactory.createStartElement("", null, column));
 						String value = mapColumns.get(column);
-						// if null doesn't write at all 
+						if(value == null){
+							value = "null";
+						}
 						writer.add(eventFactory.createCharacters(value));
 						writer.add(eventFactory.createEndElement("", null, column));
 					}
@@ -88,7 +91,11 @@ public class Insert extends Statement {
 
 		}
 		writer.close();
+		output.close();
 		tempFile.delete();
+		
+	
+		return 1 ;
 	}
 
 	private String NewString(String pro) {

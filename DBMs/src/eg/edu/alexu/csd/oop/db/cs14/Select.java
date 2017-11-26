@@ -18,8 +18,6 @@ public class Select extends Statement {
 	private static final Exception SQLClientInfoException = null;
 	private ArrayList<String> columnsNeeded;
 	private final ArrayList<Map<String, String>> Results = new ArrayList<>();
-	private Condition[] conditonsArray;
-	private char operation;
 	private HandleCondition handler ;
 
 	public Select(String[] querySplited, String currentDataBase) {
@@ -27,7 +25,7 @@ public class Select extends Statement {
 	}
 
 	@Override
-	public void excute() throws Exception {
+	public Object excute() throws Exception {
 		final StringBuilder st = new StringBuilder();
 		for (int i = 1; i < querySplited.length; i++) {
 
@@ -56,6 +54,7 @@ public class Select extends Statement {
 
 		}
 		Iterate(file);
+		return Results ;
 
 	}
 
