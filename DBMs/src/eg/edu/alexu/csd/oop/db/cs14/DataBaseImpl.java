@@ -28,7 +28,6 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public boolean executeStructureQuery(String query) {
-		query = query.toLowerCase();
 		final ChooseStatement statment = new ChooseStatement(query, currentDataBase);
 		try {
 			statment.createStatement();
