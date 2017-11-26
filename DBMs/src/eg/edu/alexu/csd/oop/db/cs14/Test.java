@@ -4,23 +4,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 public class Test {
 
-	public static void main(String[] args) {
-	
-		
-String[] strings = {"id" , " fd" , "jkbv"};
-//System.out.println((Arrays.toString(Arrays.copyOfRange(strings, 1,
-//		strings.length  ))));
-//		
-StringBuilder st = new StringBuilder();
-for (int i = 0; i < strings.length; i++) {
+	public static void main(String[] args) throws SQLException {
 
-	st.append(strings[i]);
-}
-System.out.println(st.toString());
+
+		DataBaseImpl test = new DataBaseImpl();
+		test.createDatabase("csed", false);
+		test.executeQuery("insert into test1 (id,name) values ('70','nemo');");
 
 	}
 

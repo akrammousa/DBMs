@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -35,7 +33,13 @@ public class Insert extends Statement {
 		final String temp = file.getAbsolutePath();
 		final File tempFile = new File(super.currentDataBase + "\\" + "tempo" + ".xml");
 		file.renameTo(tempFile);
-		String pro = Arrays.toString(Arrays.copyOfRange(super.querySplited, 3, super.querySplited.length - 1));
+		final StringBuilder st = new StringBuilder();
+		for (int i = 3; i < querySplited.length; i++) {
+
+			st.append(querySplited[i]);
+
+		}
+		String pro = st.toString();
 		pro = NewString(pro);
 		Map<String, String> mapColumns = new HashMap<>();
 		mapColumns = GetColumns(pro.toLowerCase().split("values", 2));
@@ -62,12 +66,15 @@ public class Insert extends Statement {
 			case XMLEvent.END_ELEMENT:
 				if (event.asEndElement().getName().toString().equalsIgnoreCase("elements")) {
 
+					writer.add(eventFactory.createStartElement("", null, "element"));
 					for (int i = 0; i < TableColumns.size(); i++) {
 
 						final String column = TableColumns.get(i).trim();
 						writer.add(eventFactory.createStartElement("", null, column));
-						writer.add(eventFactory.createCharacters(mapColumns.get(column)));
-						writer.add(eventFactory.createStartElement("", null, column));
+						String value = mapColumns.get(column);
+						// if null doesn't write at all 
+						writer.add(eventFactory.createCharacters(value));
+						writer.add(eventFactory.createEndElement("", null, column));
 					}
 				} else if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
 					writeColumns = false;

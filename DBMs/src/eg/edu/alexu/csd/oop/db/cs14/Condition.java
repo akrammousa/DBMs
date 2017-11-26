@@ -2,18 +2,6 @@ package eg.edu.alexu.csd.oop.db.cs14;
 
 public class Condition {
 	private final String column;
-	public String getColumn() {
-		return column;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public char getOperation() {
-		return operation;
-	}
-
 	private final String value;
 	private final char operation;
 
@@ -25,6 +13,18 @@ public class Condition {
 	}
 
 
+
+	public String getColumn() {
+		return column;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public char getOperation() {
+		return operation;
+	}
 
 
 }
