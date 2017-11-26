@@ -125,9 +125,13 @@ public class Select extends Statement {
 					final Map<String, String> elementMap = new HashMap<>();
 					while (elementEvent.getEventType() != XMLEvent.END_ELEMENT ) {
 						//!elementEvent.asEndElement().getName().toString().equalsIgnoreCase("element")
+						if(!elementEvent.isStartElement()){
+							elementEvent = eventReader.nextEvent();
+							continue;
+						}
 						final String columnName = elementEvent.asStartElement().getName().toString();
 						elementEvent = eventReader.nextEvent();
-						elementMap.put(columnName, elementEvent.asCharacters().getData());
+						elementMap.put(columnName, elementEvent.asCharacters().getData().trim());
 						elementEvent = eventReader.nextEvent();
 						elementEvent = eventReader.nextEvent();
 					}
@@ -135,6 +139,7 @@ public class Select extends Statement {
 					if(put){
 						Results.add(elementMap);
 					}
+					writeElement = false ;
 				}
 				writeElement = StartElementConditions(event, writeElement);
 				//use or not
@@ -168,7 +173,7 @@ public class Select extends Statement {
 		for (int i = 0; i < conditonsArray.length; i++) {
 			if (conditonsArray[i] != null) {
 				final String columnName =	conditonsArray[i].getColumn();
-				final String value = elementMap.get(conditonsArray[i].getColumn());
+				final String value = elementMap.get(columnName);
 				int integrValue;
 				switch (conditonsArray[i].getOperation()) {
 
@@ -220,8 +225,6 @@ public class Select extends Statement {
 		if (event.asStartElement().getName().toString().equalsIgnoreCase("element")) {
 
 			return true;
-		} else if (writeElement) {
-
 		}
 		return writeElement;
 

@@ -12,6 +12,7 @@ public class ChooseStatement {
 
 	public void createStatement() throws Exception {
 		query = query.replaceAll(";", "");
+		query = query.replaceAll("'", "");
 		final String[] querySplited = query.split(" ");
 		Statement instance = null;
 		//try contains instead of the loop
