@@ -10,6 +10,7 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
+		databaseName = databaseName.toLowerCase();
 		final File f = new File(databaseName);
 		this.currentDataBase = databaseName;
 		if (f.exists()) {
@@ -30,6 +31,7 @@ public class DataBaseImpl implements Database {
 		final ChooseStatement statment = new ChooseStatement(query, currentDataBase);
 		try {
 			statment.createStatement();
+			return true;
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
