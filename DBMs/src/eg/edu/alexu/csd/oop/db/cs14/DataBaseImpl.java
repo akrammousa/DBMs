@@ -10,7 +10,6 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
-		databaseName = databaseName.toLowerCase();
 		final File f = new File(databaseName);
 		this.currentDataBase = databaseName;
 		if (f.exists()) {
