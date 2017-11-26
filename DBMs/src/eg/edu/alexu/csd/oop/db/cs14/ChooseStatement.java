@@ -11,7 +11,7 @@ public class ChooseStatement {
 
 
 	public void createStatement() throws Exception {
-		this.query = this.query.toLowerCase();
+		this.query = this.query.replaceAll("\\s+", " ");
 		query = query.replaceAll(";", "");
 		query = query.replaceAll("'", "");
 		final String[] querySplited = query.split(" ");
