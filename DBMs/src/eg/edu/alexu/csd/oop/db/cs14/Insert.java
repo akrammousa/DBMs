@@ -19,7 +19,7 @@ public class Insert extends Statement {
 
 	private static final Exception SQLClientInfoException = null;
 	private static final Exception SQLException = null;
-	private ArrayList<String> TableColumns;
+	private final ArrayList<String> TableColumns = new ArrayList<>();
 
 	public Insert(String[] querySplited, String currentDataBase) {
 		super(querySplited, currentDataBase);
@@ -31,9 +31,9 @@ public class Insert extends Statement {
 
 		super.excute();
 		Boolean writeColumns = false;
-		File file = CheckTable(super.querySplited[2]);
-		String temp = file.getAbsolutePath();
-		File tempFile = new File(super.currentDataBase + "tempo" + ".xml");
+		final File file = CheckTable(super.querySplited[2]);
+		final String temp = file.getAbsolutePath();
+		final File tempFile = new File(super.currentDataBase + "\\" + "tempo" + ".xml");
 		file.renameTo(tempFile);
 		String pro = Arrays.toString(Arrays.copyOfRange(super.querySplited, 3, super.querySplited.length - 1));
 		pro = NewString(pro);
@@ -64,7 +64,7 @@ public class Insert extends Statement {
 
 					for (int i = 0; i < TableColumns.size(); i++) {
 
-						String column = TableColumns.get(i).trim();
+						final String column = TableColumns.get(i).trim();
 						writer.add(eventFactory.createStartElement("", null, column));
 						writer.add(eventFactory.createCharacters(mapColumns.get(column)));
 						writer.add(eventFactory.createStartElement("", null, column));
@@ -85,23 +85,23 @@ public class Insert extends Statement {
 	}
 
 	private String NewString(String pro) {
-		pro = pro.replaceAll("(", " ");
-		pro = pro.replaceAll(")", " ");
+		pro = pro.replaceAll("\\(", " ");
+		pro = pro.replaceAll("\\)", " ");
 		pro = pro.replaceAll(";", " ");
-		pro = pro.replaceAll("'", " ");
+		pro = pro.replaceAll("\\'", " ");
 
 		return pro;
 	}
 
 	private Map<String, String> GetColumns(String[] split) throws Exception {
 
-		String[] columns = split[0].split(",");
-		String[] values = split[1].split(",");
+		final String[] columns = split[0].split(",");
+		final String[] values = split[1].split(",");
 		// if values and columns were with different length
 		if (columns.length != values.length) {
 			throw SQLException;
 		}
-		Map<String, String> properties = new HashMap<>();
+		final Map<String, String> properties = new HashMap<>();
 		for (int i = 0; i < columns.length; i++) {
 			properties.put(columns[i].trim(), values[i].trim());
 		}
@@ -110,7 +110,7 @@ public class Insert extends Statement {
 	}
 
 	private File CheckTable(String trim) throws Exception {
-		File file = new File(super.currentDataBase + trim + ".xml");
+		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
 			throw SQLClientInfoException;
 		}

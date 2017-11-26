@@ -1,18 +1,30 @@
 package eg.edu.alexu.csd.oop.db.cs14;
 
 public class Condition {
-	private String column; 
-	private String value;
-	private char operation;
-	
+	private final String column;
+	public String getColumn() {
+		return column;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public char getOperation() {
+		return operation;
+	}
+
+	private final String value;
+	private final char operation;
+
 	public Condition(String column, String value, char operation) {
 		super();
 		this.column = column;
 		this.value = value;
 		this.operation = operation;
 	}
-	
-	
-	
+
+
+
 
 }

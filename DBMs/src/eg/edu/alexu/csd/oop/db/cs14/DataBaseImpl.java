@@ -39,13 +39,25 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public Object[][] executeQuery(String query) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		final ChooseStatement statment = new ChooseStatement(query, currentDataBase);
+		try {
+			statment.createStatement();
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null ;
 	}
 
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
-		// TODO Auto-generated method stub
+		final ChooseStatement statment = new ChooseStatement(query, currentDataBase);
+		try {
+			statment.createStatement();
+		} catch (final Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return 0;
 	}
 
