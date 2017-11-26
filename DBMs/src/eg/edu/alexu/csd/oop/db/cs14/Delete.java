@@ -7,4 +7,9 @@ public class Delete extends Statement {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public void excute() throws Exception {
+
+	}
+
 }

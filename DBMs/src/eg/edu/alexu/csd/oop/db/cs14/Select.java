@@ -6,10 +6,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import javax.management.Attribute;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -19,10 +17,10 @@ public class Select extends Statement {
 
 	private static final Exception SQLClientInfoException = null;
 	private ArrayList<String> columnsNeeded;
-	private Map<String, String> TableColumns;
 	private final ArrayList<Map<String, String>> Results = new ArrayList<>();
 	private Condition[] conditonsArray;
 	private char operation;
+	private HandleCondition handler ;
 
 	public Select(String[] querySplited, String currentDataBase) {
 		super(querySplited, currentDataBase);
@@ -49,63 +47,15 @@ public class Select extends Statement {
 			file = CheckTable(strings[0].trim());
 			String conditionString;
 			conditionString = strings[1];
-			final String[] conditonsArrayString = splitConditions(conditionString);
-			parseConditions(conditonsArrayString);
+			handler = new HandleCondition(conditionString);
 
 		} else {
-			conditonsArray = null;
+			handler = new HandleCondition();
+			handler.setConditionsArray(null);
 			file = CheckTable(strings[1].trim());
 
 		}
 		Iterate(file);
-
-	}
-
-	private void parseConditions(String[] conditonsArrayString) {
-		conditonsArray = new Condition[2];
-		for (int i = 0; i < conditonsArrayString.length; i++) {
-			Condition condition = null;
-			if (conditonsArrayString[i] != null) {
-				if (conditonsArrayString[i].contains("<")) {
-					final String tempArray[] = conditonsArrayString[i].split("<", 2);
-					condition = new Condition(tempArray[0], tempArray[1], '<');
-				} else if (conditonsArrayString[i].contains(">")) {
-					final String tempArray[] = conditonsArrayString[i].split(">", 2);
-					condition = new Condition(tempArray[0], tempArray[1], '>');
-				} else if (conditonsArrayString[i].contains("=")) {
-					final String tempArray[] = conditonsArrayString[i].split("=", 2);
-					condition = new Condition(tempArray[0], tempArray[1], '=');
-				}
-				conditonsArray[i] = condition;
-			}
-		}
-
-	}
-
-	private String[] splitConditions(String conditionString) {
-		String[] conditonsArrayString = null;
-		if (conditionString != null) {
-
-			if (conditionString.toLowerCase().contains("and")) {
-				operation = 'a';
-				conditonsArrayString = conditionString.toLowerCase().split("and", 2);
-
-			} else if (conditionString.toLowerCase().contains("or")) {
-				operation = 'o';
-				conditonsArrayString = conditionString.toLowerCase().split("or", 2);
-			} else if (conditionString.toLowerCase().contains("not")) {
-				operation = 'n';
-				conditionString = conditionString.toLowerCase().replaceAll("not", "");
-				conditonsArrayString = new String[2];
-				conditonsArrayString[0] = conditionString.trim();
-			} else {
-				operation = 'e';
-				conditonsArrayString = new String[2];
-				conditonsArrayString[0] = conditionString.trim();
-			}
-			return conditonsArrayString;
-		}
-		return conditonsArrayString;
 
 	}
 
@@ -135,7 +85,10 @@ public class Select extends Statement {
 						elementEvent = eventReader.nextEvent();
 						elementEvent = eventReader.nextEvent();
 					}
-					final boolean put = checkCondition(elementMap);
+					//					final boolean put = checkCondition(elementMap);
+
+					final boolean put = handler.checkCondition(elementMap);
+
 					if(put){
 						Results.add(elementMap);
 					}
@@ -165,60 +118,8 @@ public class Select extends Statement {
 
 	}
 
-	private boolean checkCondition(Map<String, String> elementMap) {
-		if(conditonsArray == null){
-			return true ;
-		}
-		final boolean[] fitConditions = new boolean[2];
-		for (int i = 0; i < conditonsArray.length; i++) {
-			if (conditonsArray[i] != null) {
-				final String columnName =	conditonsArray[i].getColumn();
-				final String value = elementMap.get(columnName);
-				int integrValue;
-				switch (conditonsArray[i].getOperation()) {
 
-				case '=':
-					fitConditions[i] = value.equals(conditonsArray[i].getValue());
-					break;
 
-				case '<':
-					integrValue = Integer.parseInt(value);
-					fitConditions[i] = integrValue < Integer.parseInt(conditonsArray[i].getValue());
-					break;
-				case '>':
-					integrValue = Integer.parseInt(value);
-					fitConditions[i] = integrValue > Integer.parseInt(conditonsArray[i].getValue());
-					break;
-				}
-			}
-		}
-		switch (operation) {
-		case 'a':
-			return fitConditions[0] && fitConditions[1];
-		case 'o':
-			return fitConditions[0] || fitConditions[1];
-		case 'n':
-			return !fitConditions[0];
-		case 'e':
-			return fitConditions[0];
-		}
-		return false;
-
-	}
-
-	private boolean StartColumnsConditions(XMLEvent event, boolean writeColumns) {
-		if (event.asStartElement().getName().toString().equalsIgnoreCase("columns")) {
-
-			return true;
-		} else if (writeColumns) {
-			final Iterator<Attribute> attributes = event.asStartElement().getAttributes();
-			final String type = attributes.next().getValue().toString();
-			TableColumns.put(event.asStartElement().getName().toString(), type);
-
-		}
-		return writeColumns;
-
-	}
 
 	private boolean StartElementConditions(XMLEvent event, boolean writeElement) {
 
