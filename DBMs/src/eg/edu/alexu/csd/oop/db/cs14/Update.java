@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class Update extends Statement {
 	private HandleCondition handler;
 	ArrayList<TwoStrings> values;
 	private static final Exception SQLClientInfoException = null;
+	private static final Exception SQLException = null;
 
 	public Update(String[] querySplited, String currentDataBase, Object returnObject) {
 		super(querySplited, currentDataBase, returnObject);
@@ -44,8 +46,7 @@ public class Update extends Statement {
 		String[] strings = query.toLowerCase().split("set", 2);
 		file = CheckTable(strings[0].trim());
 		if (file == null || file.length() == 0) {
-			this.returnObject = 0;
-			return 0;
+			throw SQLException;
 		}
 		final String temp = file.getAbsolutePath();
 		final File tempFile = new File(this.currentDataBase + "\\" + "tem" + ".xml");
