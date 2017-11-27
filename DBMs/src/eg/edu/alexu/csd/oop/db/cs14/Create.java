@@ -20,7 +20,7 @@ public class Create extends Statement {
 
 	@Override
 	public Object excute() throws Exception {
-		if (super.querySplited[1].equalsIgnoreCase("database")) {
+		if (super.querySplited[1].trim().equalsIgnoreCase("database")) {
 			if (!new File("DataBases").exists()) {
 				final File file = new File("DataBases");
 				file.mkdir();
@@ -30,7 +30,7 @@ public class Create extends Statement {
 			final boolean temp = f.mkdir();
 			this.returnObject = temp;
 			return (temp);
-		} else if (super.querySplited[1].equalsIgnoreCase("table")) {
+		} else if (super.querySplited[1].trim().equalsIgnoreCase("table")) {
 
 		
 			final StringBuilder st = new StringBuilder();
