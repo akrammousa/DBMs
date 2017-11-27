@@ -28,19 +28,27 @@ public class Insert extends Statement {
 	@Override
 	public Object excute() throws Exception {
 
-		super.excute();
+		returnObject = new Object();
 		Boolean writeColumns = false;
-		final File file = CheckTable(super.querySplited[2]);
-		final String temp = file.getAbsolutePath();
-		final File tempFile = new File(super.currentDataBase + "\\" + "tempo" + ".xml");
-		file.renameTo(tempFile);
-		final StringBuilder st = new StringBuilder();
-		for (int i = 3; i < querySplited.length; i++) {
+		StringBuilder st = new StringBuilder();
+		for (int i = 2; i < querySplited.length; i++) {
 
 			st.append(querySplited[i]);
 
 		}
-		String pro = st.toString();
+		final String tem  =st.toString();
+		final String[] strings = tem.split("\\(" , 2);
+		final File file = CheckTable(strings[0].trim());
+		if(file == null){
+			this.returnObject = 0;
+			return returnObject;
+		}
+		final String temp = file.getPath();
+		final File tempFile = new File(super.currentDataBase + "\\" + "tempo" + ".xml");
+		file.renameTo(tempFile);
+		st = new StringBuilder();
+
+		String pro = strings[1];
 		pro = NewString(pro);
 		Map<String, String> mapColumns = new HashMap<>();
 		mapColumns = GetColumns(pro.toLowerCase().split("values", 2));
@@ -48,14 +56,23 @@ public class Insert extends Statement {
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 		final FileOutputStream output = new FileOutputStream(new File(temp));
-		final XMLEventWriter writer = factory.createXMLEventWriter(output);
+		final XMLEventWriter writer = factory.createXMLEventWriter(output , "ISO-8859-1");
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(tempFile));
-
+		//		final XMLStreamWriter writer = factory.createXMLStreamWriter(output,"ISO-8859-1");
+		//		writer.writeStartDocument("ISO-8859-1","1.0");
+		//		final FileWriter stringWriter = new FileWriter(table);
+		//		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
+		//		final XMLStreamWriter writer = factory.createXMLStreamWriter(stringWriter);
+		//		writer.writeStartDocument();
 		while (eventReader.hasNext()) {
 
 			final XMLEvent event = eventReader.nextEvent();
 
 			switch (event.getEventType()) {
+			case XMLEvent.START_DOCUMENT:
+				writer.add(eventFactory.createStartDocument("ISO-8859-1","1.0"));
+				continue;
+				//break;
 			case XMLEvent.START_ELEMENT:
 				if (event.asStartElement().getName().toString().equalsIgnoreCase("columns")) {
 
@@ -128,7 +145,9 @@ public class Insert extends Statement {
 	private File CheckTable(String trim) throws Exception {
 		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
-			throw SQLClientInfoException;
+			this.returnObject = 0;
+			//throw SQLClientInfoException;
+			return null;
 		}
 
 		return file;

@@ -1,6 +1,7 @@
 package eg.edu.alexu.csd.oop.db.cs14;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +23,9 @@ public class Create extends Statement {
 		if (super.querySplited[1].equalsIgnoreCase("database")) {
 			System.out.println(super.currentDataBase);
 			final File f = new File(super.currentDataBase);
-			return (f.mkdir());
+			final boolean temp = f.mkdir();
+			this.returnObject = temp;
+			return (temp);
 		} else if (super.querySplited[1].equalsIgnoreCase("table")) {
 			System.out.println(Arrays.copyOfRange(super.querySplited, 2, super.querySplited.length - 1).toString());
 			final StringBuilder st = new StringBuilder();
@@ -37,20 +40,25 @@ public class Create extends Statement {
 	}
 
 	private boolean createTable(String columns) throws Exception {
-		columns = columns.replaceAll("\\);", " ");
+		columns = columns.replaceAll("\\);", "");
 		final ArrayList<String> ColumnNames = new ArrayList<>();
 
-		String[] strings = columns.split("\\(");
+		String[] strings = columns.split("\\(" );
 
 		final String tableName = strings[0].trim();
 
 		final File table = CheckTable(tableName);
+		if(result == false){
+			super.returnObject = result;
+			return result;
+		}
 		if (result) {
 			try {
 				final FileWriter stringWriter = new FileWriter(table);
 				final XMLOutputFactory factory = XMLOutputFactory.newInstance();
-				final XMLStreamWriter writer = factory.createXMLStreamWriter(stringWriter);
-				writer.writeStartDocument();
+				final FileOutputStream output = new FileOutputStream(table);
+				final XMLStreamWriter writer = factory.createXMLStreamWriter(output,"ISO-8859-1");
+				writer.writeStartDocument("ISO-8859-1","1.0");
 				writer.writeStartElement(tableName);
 				writer.writeStartElement("columns");
 				strings[1].trim();
@@ -76,6 +84,7 @@ public class Create extends Statement {
 				writer.writeEndDocument();
 				writer.flush();
 				writer.close();
+				output.close();
 				stringWriter.close();
 			} catch (final Exception e) {
 				// TODO: handle exception

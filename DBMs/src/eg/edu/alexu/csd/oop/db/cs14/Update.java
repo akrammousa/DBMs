@@ -32,6 +32,7 @@ public class Update extends Statement {
 
 	@Override
 	public Object excute() throws Exception {
+		returnObject = new Object();
 		final StringBuilder st = new StringBuilder();
 		for (int i = 1; i < querySplited.length; i++) {
 
@@ -42,6 +43,10 @@ public class Update extends Statement {
 		File file = null;
 		String[] strings = query.toLowerCase().split("set", 2);
 		file = CheckTable(strings[0].trim());
+		if(file == null){
+			this.returnObject = 0;
+			return 0;
+		}
 		final String temp = file.getAbsolutePath();
 		final File tempFile = new File(super.currentDataBase + "\\" + "tem" + ".xml");
 		System.out.println(file.renameTo(tempFile));
@@ -71,17 +76,19 @@ public class Update extends Statement {
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 		final FileOutputStream output = new FileOutputStream(new File(temp));
-		final XMLEventWriter writer = factory.createXMLEventWriter(output);
+		final XMLEventWriter writer = factory.createXMLEventWriter(output , "ISO-8859-1");
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(file));
 
 		while (eventReader.hasNext()) {
 			final XMLEvent event = eventReader.nextEvent();
-			if (!writeElement){
+			if (!writeElement && event.getEventType()!=XMLEvent.START_DOCUMENT){
 				writer.add(event);
 			}
 			switch (event.getEventType()) {
 
-
+			case XMLEvent.START_DOCUMENT:
+				writer.add(eventFactory.createStartDocument("ISO-8859-1","1.0"));
+				continue;
 			case XMLEvent.START_ELEMENT:
 				if (writeElement) {
 					XMLEvent elementEvent = event;
@@ -189,7 +196,9 @@ public class Update extends Statement {
 	private File CheckTable(String trim) throws Exception {
 		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
-			throw SQLClientInfoException;
+			this.returnObject = 0;
+			//throw SQLClientInfoException;
+			return null;
 		}
 
 		return file;

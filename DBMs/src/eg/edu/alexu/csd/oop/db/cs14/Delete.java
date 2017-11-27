@@ -54,6 +54,10 @@ public class Delete extends Statement {
 			handler = new HandleCondition();
 			handler.setConditionsArray(null);
 			file = CheckTable(strings[1].trim());
+			if(file == null){
+				this.returnObject = 0;
+				return 0;
+			}
 
 		}
 		Iterate(file);
@@ -72,13 +76,15 @@ public class Delete extends Statement {
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 		final FileOutputStream output = new FileOutputStream(new File(temp));
-		final XMLEventWriter writer = factory.createXMLEventWriter(output);
+		final XMLEventWriter writer = factory.createXMLEventWriter(output , "ISO-8859-1");
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(tempFile));
 
 		while (eventReader.hasNext()) {
 			XMLEvent event = eventReader.nextEvent();
 			switch (event.getEventType()) {
-
+			case XMLEvent.START_DOCUMENT:
+				writer.add(eventFactory.createStartDocument("ISO-8859-1","1.0"));
+				continue;
 			case XMLEvent.START_ELEMENT:
 				if(event.asStartElement().getName().toString().equals("elements")){
 					if(deleteAllTable){
@@ -203,7 +209,9 @@ public class Delete extends Statement {
 	private File CheckTable(String trim) throws Exception {
 		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
-			throw SQLClientInfoException;
+			this.returnObject = 0;
+			//throw SQLClientInfoException;
+			return null;
 		}
 
 		return file;

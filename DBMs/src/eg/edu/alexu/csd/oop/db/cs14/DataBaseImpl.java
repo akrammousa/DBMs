@@ -10,7 +10,8 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
-		if(!new File("DataBases").exists()){
+
+		if (!new File("DataBases").exists()) {
 			final File file = new File("DataBases");
 			file.mkdir();
 		}
@@ -19,19 +20,34 @@ public class DataBaseImpl implements Database {
 		if (f.exists()) {
 			if (dropIfExists) {
 				executeStructureQuery("DROP DATABASE " + "DataBases" + "\\" + databaseName);
-				executeStructureQuery("CREATE DATABASE " + "DataBases" + "\\" +  databaseName);
+				executeStructureQuery("CREATE DATABASE " + "DataBases" + "\\" + databaseName);
 			}
-		}
-		else {
+		} else {
 			executeStructureQuery("CREATE DATABASE " + this.currentDataBase);
 		}
 		this.currentDataBase = f.getPath();
+		// throw new RuntimeException( "Creat db: " + databaseName);
+
 		return currentDataBase;
 	}
 
 	@Override
 	public boolean executeStructureQuery(String query) {
-		final ChooseStatement statment = new ChooseStatement(query, currentDataBase,null);
+		// if(currentDataBase == null){
+		// currentDataBase = "DataBases" + "\\" + "default";
+		// }
+		/*
+		 * final File f= new File("DataBases"); if(!f.exists()){ f.mkdir();
+		 *
+		 * }
+		 */
+		// this.currentDataBase = f.getPath();
+
+		if(currentDataBase.equalsIgnoreCase("DataBases") || currentDataBase == null){
+			return false;
+		}
+
+		final ChooseStatement statment = new ChooseStatement(query, currentDataBase, null);
 		try {
 			statment.createStatement();
 			return (boolean) statment.returnObject;
@@ -39,24 +55,28 @@ public class DataBaseImpl implements Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//throw new RuntimeException( "Ex struct: " + query);
+
 		return false;
 	}
 
 	@Override
 	public Object[][] executeQuery(String query) throws SQLException {
-		final ChooseStatement statment = new ChooseStatement(query, currentDataBase,null);
+		final ChooseStatement statment = new ChooseStatement(query, currentDataBase, null);
 		try {
 			statment.createStatement();
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return (Object[][]) statment.returnObject ;
+		//throw new RuntimeException( "ex qu: " + query);
+
+		return (Object[][]) statment.returnObject;
 	}
 
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
-		final ChooseStatement statment = new ChooseStatement(query, currentDataBase,null);
+		final ChooseStatement statment = new ChooseStatement(query, currentDataBase, null);
 		try {
 			statment.createStatement();
 		} catch (final Exception e) {
@@ -67,10 +87,11 @@ public class DataBaseImpl implements Database {
 
 		try {
 			temp = (int) statment.returnObject;
-
 		} catch (final Exception e) {
-			//throw new RuntimeException(query);
+			// throw new RuntimeException(query);
 		}
+		//throw new RuntimeException( "update db: " + query);
+
 		return temp;
 	}
 

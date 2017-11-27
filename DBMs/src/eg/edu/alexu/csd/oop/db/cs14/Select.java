@@ -26,6 +26,7 @@ public class Select extends Statement {
 
 	@Override
 	public Object[][] excute() throws Exception {
+		returnObject = new Object();
 		final StringBuilder st = new StringBuilder();
 		for (int i = 1; i < querySplited.length; i++) {
 
@@ -86,6 +87,7 @@ public class Select extends Statement {
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(file));
 
+
 		while (eventReader.hasNext()) {
 			final XMLEvent event = eventReader.nextEvent();
 			switch (event.getEventType()) {
@@ -113,7 +115,10 @@ public class Select extends Statement {
 					if(put){
 						for (final Map.Entry<String, String> entry : elementMap.entrySet())
 						{
-							if (columnsNeeded.contains(entry.getKey())){
+							if (columnsNeeded!= null &&columnsNeeded.contains(entry.getKey())){
+								tempMap.put(entry.getKey(), entry.getValue());
+							}
+							else{
 								tempMap.put(entry.getKey(), entry.getValue());
 							}
 						}
