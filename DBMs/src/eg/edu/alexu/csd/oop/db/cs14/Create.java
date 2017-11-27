@@ -25,7 +25,7 @@ public class Create extends Statement {
 				final File file = new File("DataBases");
 				file.mkdir();
 			}
-			final File f = new File("DataBases" + "\\" + super.querySplited[2] + ".xml");
+			final File f = new File(super.currentDataBase);
 			final boolean temp = f.mkdir();
 			this.returnObject = temp;
 			return (temp);
@@ -51,14 +51,10 @@ public class Create extends Statement {
 		columns = columns.replaceAll("\\);", "");
 		final ArrayList<String> ColumnNames = new ArrayList<>();
 
-		
 		String[] strings = columns.split("\\(");
 
 		final String tableName = strings[0].trim();
 
-		if(strings[1].trim().equals("")){
-			throw SQLException;
-		}
 		final File table = CheckTable(tableName);
 		if (result && table != null) {
 			try {

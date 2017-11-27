@@ -36,18 +36,16 @@ public class Insert extends Statement {
 			st.append(querySplited[i]);
 
 		}
-		final String tem = st.toString();
+		final String tem = st.toString().trim();
 		final String[] strings = tem.split("\\(", 2);
 		final File file = CheckTable(strings[0].trim());
 		if (file == null || file.length() == 0) {
-			this.returnObject = 0;
+			this.returnObject = 1;
 			return returnObject;
 		}
 		final String temp = file.getPath();
 		final File tempFile = new File(this.currentDataBase + "\\" + "tempo" + ".xml");
 		file.renameTo(tempFile);
-		st = new StringBuilder();
-
 		String pro = strings[1].trim();
 		pro = NewString(pro);
 		Map<String, String> mapColumns = new HashMap<>();
@@ -131,8 +129,8 @@ public class Insert extends Statement {
 
 	private Map<String, String> GetColumns(String[] split) throws Exception {
 
-		final String[] columns = split[0].split(",");
-		final String[] values = split[1].split(",");
+		final String[] columns = split[0].trim().split(",");
+		final String[] values = split[1].trim().split(",");
 		// if values and columns were with different length
 		if (columns.length != values.length) {
 			throw SQLException;
