@@ -43,7 +43,7 @@ public class DataBaseImpl implements Database {
 		 */
 		// this.currentDataBase = f.getPath();
 
-		if(currentDataBase.equalsIgnoreCase("DataBases") || currentDataBase == null){
+		if (currentDataBase.equalsIgnoreCase("DataBases") || currentDataBase == null) {
 			return false;
 		}
 
@@ -55,13 +55,14 @@ public class DataBaseImpl implements Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//throw new RuntimeException( "Ex struct: " + query);
+		// throw new RuntimeException( "Ex struct: " + query);
 
 		return false;
 	}
 
 	@Override
 	public Object[][] executeQuery(String query) throws SQLException {
+
 		final ChooseStatement statment = new ChooseStatement(query, currentDataBase, null);
 		try {
 			statment.createStatement();
@@ -69,7 +70,7 @@ public class DataBaseImpl implements Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//throw new RuntimeException( "ex qu: " + query);
+		// throw new RuntimeException( "ex qu: " + query);
 
 		return (Object[][]) statment.returnObject;
 	}
@@ -90,7 +91,7 @@ public class DataBaseImpl implements Database {
 		} catch (final Exception e) {
 			// throw new RuntimeException(query);
 		}
-		//throw new RuntimeException( "update db: " + query);
+		// throw new RuntimeException( "update db: " + query);
 
 		return temp;
 	}

@@ -21,7 +21,7 @@ public class Insert extends Statement {
 	private final ArrayList<String> TableColumns = new ArrayList<>();
 
 	public Insert(String[] querySplited, String currentDataBase, Object returnObject) {
-		super(querySplited, currentDataBase,returnObject);
+		super(querySplited, currentDataBase, returnObject);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -36,10 +36,10 @@ public class Insert extends Statement {
 			st.append(querySplited[i]);
 
 		}
-		final String tem  =st.toString();
-		final String[] strings = tem.split("\\(" , 2);
+		final String tem = st.toString();
+		final String[] strings = tem.split("\\(", 2);
 		final File file = CheckTable(strings[0].trim());
-		if(file == null){
+		if (file == null) {
 			this.returnObject = 0;
 			return returnObject;
 		}
@@ -56,23 +56,25 @@ public class Insert extends Statement {
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 		final FileOutputStream output = new FileOutputStream(new File(temp));
-		final XMLEventWriter writer = factory.createXMLEventWriter(output , "ISO-8859-1");
+		final XMLEventWriter writer = factory.createXMLEventWriter(output, "ISO-8859-1");
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(tempFile));
-		//		final XMLStreamWriter writer = factory.createXMLStreamWriter(output,"ISO-8859-1");
-		//		writer.writeStartDocument("ISO-8859-1","1.0");
-		//		final FileWriter stringWriter = new FileWriter(table);
-		//		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		//		final XMLStreamWriter writer = factory.createXMLStreamWriter(stringWriter);
-		//		writer.writeStartDocument();
+		// final XMLStreamWriter writer =
+		// factory.createXMLStreamWriter(output,"ISO-8859-1");
+		// writer.writeStartDocument("ISO-8859-1","1.0");
+		// final FileWriter stringWriter = new FileWriter(table);
+		// final XMLOutputFactory factory = XMLOutputFactory.newInstance();
+		// final XMLStreamWriter writer =
+		// factory.createXMLStreamWriter(stringWriter);
+		// writer.writeStartDocument();
 		while (eventReader.hasNext()) {
 
 			final XMLEvent event = eventReader.nextEvent();
 
 			switch (event.getEventType()) {
 			case XMLEvent.START_DOCUMENT:
-				writer.add(eventFactory.createStartDocument("ISO-8859-1","1.0"));
+				writer.add(eventFactory.createStartDocument("ISO-8859-1", "1.0"));
 				continue;
-				//break;
+			// break;
 			case XMLEvent.START_ELEMENT:
 				if (event.asStartElement().getName().toString().equalsIgnoreCase("columns")) {
 
@@ -91,7 +93,7 @@ public class Insert extends Statement {
 						final String column = TableColumns.get(i).trim();
 						writer.add(eventFactory.createStartElement("", null, column));
 						String value = mapColumns.get(column);
-						if(value == null){
+						if (value == null) {
 							value = "null";
 						}
 						writer.add(eventFactory.createCharacters(value));
@@ -114,7 +116,7 @@ public class Insert extends Statement {
 
 		final int rowsAdded = 1;
 		super.returnObject = rowsAdded;
-		return rowsAdded ;
+		return rowsAdded;
 	}
 
 	private String NewString(String pro) {
@@ -146,7 +148,7 @@ public class Insert extends Statement {
 		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
 			this.returnObject = 0;
-			//throw SQLClientInfoException;
+			// throw SQLClientInfoException;
 			return null;
 		}
 

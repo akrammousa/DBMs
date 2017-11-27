@@ -18,10 +18,10 @@ public class Select extends Statement {
 	private static final Exception SQLClientInfoException = null;
 	private ArrayList<String> columnsNeeded;
 	private final ArrayList<Map<String, String>> Results = new ArrayList<>();
-	private HandleCondition handler ;
+	private HandleCondition handler;
 
-	public Select(String[] querySplited, String currentDataBase,Object returnObject) {
-		super(querySplited, currentDataBase,returnObject);
+	public Select(String[] querySplited, String currentDataBase, Object returnObject) {
+		super(querySplited, currentDataBase, returnObject);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class Select extends Statement {
 			columnsNeeded = null;
 		} else {
 			final String[] test = strings[0].split(",");
-			columnsNeeded= new ArrayList<> (Arrays.asList(test));
+			columnsNeeded = new ArrayList<>(Arrays.asList(test));
 		}
 		File file = null;
 		if (strings[1].toLowerCase().contains("where")) {
@@ -57,21 +57,20 @@ public class Select extends Statement {
 		}
 		Iterate(file);
 		super.returnObject = ReturnArray();
-		return (Object[][]) super.returnObject ;
+		return (Object[][]) super.returnObject;
 
 	}
 
 	private Object[][] ReturnArray() {
 		Object[][] returnArray = new Object[Results.size()][];
-		if(Results.size()!=0){
+		if (Results.size() != 0) {
 			final int numOfColumns = Results.get(0).size();
 			returnArray = new Object[Results.size()][numOfColumns];
 			for (int i = 0; i < Results.size(); i++) {
 				Map<String, String> elementMap = new HashMap<>();
 				elementMap = Results.get(i);
 				for (int j = 0; j < numOfColumns; j++) {
-					for (final Map.Entry<String, String> entry : elementMap.entrySet())
-					{
+					for (final Map.Entry<String, String> entry : elementMap.entrySet()) {
 						returnArray[i][j] = entry.getValue();
 						j++;
 					}
@@ -87,7 +86,6 @@ public class Select extends Statement {
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(file));
 
-
 		while (eventReader.hasNext()) {
 			final XMLEvent event = eventReader.nextEvent();
 			switch (event.getEventType()) {
@@ -96,9 +94,9 @@ public class Select extends Statement {
 				if (writeElement) {
 					XMLEvent elementEvent = event;
 					final Map<String, String> elementMap = new HashMap<>();
-					while (elementEvent.getEventType() != XMLEvent.END_ELEMENT ) {
-						//!elementEvent.asEndElement().getName().toString().equalsIgnoreCase("element")
-						if(!elementEvent.isStartElement()){
+					while (elementEvent.getEventType() != XMLEvent.END_ELEMENT) {
+						// !elementEvent.asEndElement().getName().toString().equalsIgnoreCase("element")
+						if (!elementEvent.isStartElement()) {
 							elementEvent = eventReader.nextEvent();
 							continue;
 						}
@@ -108,36 +106,38 @@ public class Select extends Statement {
 						elementEvent = eventReader.nextEvent();
 						elementEvent = eventReader.nextEvent();
 					}
-					//					final boolean put = checkCondition(elementMap);
+					// final boolean put = checkCondition(elementMap);
 
 					final boolean put = handler.checkCondition(elementMap);
 					final Map<String, String> tempMap = new HashMap<>();
-					if(put){
-						for (final Map.Entry<String, String> entry : elementMap.entrySet())
-						{
-							if (columnsNeeded!= null &&columnsNeeded.contains(entry.getKey())){
+					if (put) {
+						for (final Map.Entry<String, String> entry : elementMap.entrySet()) {
+							if (columnsNeeded != null && columnsNeeded.contains(entry.getKey())) {
 								tempMap.put(entry.getKey(), entry.getValue());
-							}
-							else{
+							} else {
 								tempMap.put(entry.getKey(), entry.getValue());
 							}
 						}
 						Results.add(tempMap);
 					}
-					writeElement = false ;
+					writeElement = false;
 				}
 				writeElement = StartElementConditions(event, writeElement);
-				//use or not
-				//	writeColumns = StartColumnsConditions(event, writeColumns);
+				// use or not
+				// writeColumns = StartColumnsConditions(event, writeColumns);
 
 				break;
 
 			case XMLEvent.END_ELEMENT:
-				/*if (event.asEndElement().getName().toString().equalsIgnoreCase("element")) {
-
-					writeElement = false;
-
-				} else */if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
+				/*
+				 * if
+				 * (event.asEndElement().getName().toString().equalsIgnoreCase(
+				 * "element")) {
+				 * 
+				 * writeElement = false;
+				 * 
+				 * } else
+				 */if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
 					writeColumns = false;
 				}
 
@@ -145,13 +145,9 @@ public class Select extends Statement {
 
 			}
 
-
 		}
 
 	}
-
-
-
 
 	private boolean StartElementConditions(XMLEvent event, boolean writeElement) {
 

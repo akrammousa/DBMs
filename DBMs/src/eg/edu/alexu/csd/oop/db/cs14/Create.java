@@ -15,7 +15,7 @@ public class Create extends Statement {
 	private static final Exception SQLException = null;
 
 	public Create(String[] querySplited, String currentDataBase, Object returnObject) {
-		super(querySplited, currentDataBase,returnObject);
+		super(querySplited, currentDataBase, returnObject);
 	}
 
 	@Override
@@ -43,12 +43,12 @@ public class Create extends Statement {
 		columns = columns.replaceAll("\\);", "");
 		final ArrayList<String> ColumnNames = new ArrayList<>();
 
-		String[] strings = columns.split("\\(" );
+		String[] strings = columns.split("\\(");
 
 		final String tableName = strings[0].trim();
 
 		final File table = CheckTable(tableName);
-		if(result == false){
+		if (result == false) {
 			super.returnObject = result;
 			return result;
 		}
@@ -57,8 +57,8 @@ public class Create extends Statement {
 				final FileWriter stringWriter = new FileWriter(table);
 				final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 				final FileOutputStream output = new FileOutputStream(table);
-				final XMLStreamWriter writer = factory.createXMLStreamWriter(output,"ISO-8859-1");
-				writer.writeStartDocument("ISO-8859-1","1.0");
+				final XMLStreamWriter writer = factory.createXMLStreamWriter(output, "ISO-8859-1");
+				writer.writeStartDocument("ISO-8859-1", "1.0");
 				writer.writeStartElement(tableName);
 				writer.writeStartElement("columns");
 				strings[1].trim();

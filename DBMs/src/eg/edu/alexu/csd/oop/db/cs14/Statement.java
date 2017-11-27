@@ -6,7 +6,6 @@ public class Statement {
 	String currentDataBase;
 	Object returnObject;
 	public Statement(String[] querySplited, String currenrDataBase, Object returnObject) {
-		super();
 		this.querySplited = querySplited;
 		this.currentDataBase = currenrDataBase;
 		this.returnObject = returnObject;

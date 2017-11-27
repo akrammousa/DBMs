@@ -19,14 +19,14 @@ import javax.xml.stream.events.XMLEvent;
 public class Update extends Statement {
 
 	private ArrayList<String> columnsNeeded;
-	private int results ;
+	private int results;
 	private HandleCondition handler;
 	ArrayList<TwoStrings> values;
 	private static final Exception SQLClientInfoException = null;
 
 	public Update(String[] querySplited, String currentDataBase, Object returnObject) {
-		super(querySplited, currentDataBase,returnObject);
-		this.results=0;
+		super(querySplited, currentDataBase, returnObject);
+		this.results = 0;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -43,7 +43,7 @@ public class Update extends Statement {
 		File file = null;
 		String[] strings = query.toLowerCase().split("set", 2);
 		file = CheckTable(strings[0].trim());
-		if(file == null){
+		if (file == null) {
 			this.returnObject = 0;
 			return 0;
 		}
@@ -63,12 +63,12 @@ public class Update extends Statement {
 
 		}
 
-		Iterate(tempFile , temp);
+		Iterate(tempFile, temp);
 		super.returnObject = results;
-		return results ;
+		return results;
 	}
 
-	private void Iterate(File file , String temp) throws XMLStreamException, IOException {
+	private void Iterate(File file, String temp) throws XMLStreamException, IOException {
 		boolean writeColumns = false;
 		boolean writeElement = false;
 
@@ -76,18 +76,18 @@ public class Update extends Statement {
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 		final FileOutputStream output = new FileOutputStream(new File(temp));
-		final XMLEventWriter writer = factory.createXMLEventWriter(output , "ISO-8859-1");
+		final XMLEventWriter writer = factory.createXMLEventWriter(output, "ISO-8859-1");
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(file));
 
 		while (eventReader.hasNext()) {
 			final XMLEvent event = eventReader.nextEvent();
-			if (!writeElement && event.getEventType()!=XMLEvent.START_DOCUMENT){
+			if (!writeElement && event.getEventType() != XMLEvent.START_DOCUMENT) {
 				writer.add(event);
 			}
 			switch (event.getEventType()) {
 
 			case XMLEvent.START_DOCUMENT:
-				writer.add(eventFactory.createStartDocument("ISO-8859-1","1.0"));
+				writer.add(eventFactory.createStartDocument("ISO-8859-1", "1.0"));
 				continue;
 			case XMLEvent.START_ELEMENT:
 				if (writeElement) {
@@ -134,19 +134,17 @@ public class Update extends Statement {
 				 *
 				 * } else
 				 */if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
-					 writeColumns = false;
-				 }
+					writeColumns = false;
+				}
 
-				 break;
+				break;
 
 			}
-
 
 		}
 		writer.close();
 		output.close();
 		file.delete();
-
 
 	}
 
@@ -197,7 +195,7 @@ public class Update extends Statement {
 		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
 			this.returnObject = 0;
-			//throw SQLClientInfoException;
+			// throw SQLClientInfoException;
 			return null;
 		}
 

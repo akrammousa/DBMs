@@ -7,6 +7,7 @@ public class TwoStrings {
 	public String getString() {
 		return string;
 	}
+	
 	public String getValue() {
 		return value;
 	}

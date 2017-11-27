@@ -12,8 +12,6 @@ public class Condition {
 		this.operation = operation;
 	}
 
-
-
 	public String getColumn() {
 		return column;
 	}
@@ -25,6 +23,5 @@ public class Condition {
 	public char getOperation() {
 		return operation;
 	}
-
 
 }

@@ -3,16 +3,16 @@ package eg.edu.alexu.csd.oop.db.cs14;
 import java.util.Map;
 
 public class HandleCondition {
-	private String conditionString ;
-	private Condition[] conditionsArray ;
+	private String conditionString;
+	private Condition[] conditionsArray;
+
 	public void setConditionsArray(Condition[] conditionsArray) {
 		this.conditionsArray = conditionsArray;
 	}
 
-
 	private char operation;
 
-	public HandleCondition(){
+	public HandleCondition() {
 
 	}
 
@@ -70,15 +70,14 @@ public class HandleCondition {
 		return conditionsArrayString;
 	}
 
-
 	public boolean checkCondition(Map<String, String> elementMap) {
-		if(conditionsArray == null){
-			return true ;
+		if (conditionsArray == null) {
+			return true;
 		}
 		final boolean[] fitConditions = new boolean[2];
 		for (int i = 0; i < conditionsArray.length; i++) {
 			if (conditionsArray[i] != null) {
-				final String columnName =	conditionsArray[i].getColumn();
+				final String columnName = conditionsArray[i].getColumn();
 				final String value = elementMap.get(columnName);
 				int integrValue;
 				switch (conditionsArray[i].getOperation()) {
@@ -92,11 +91,11 @@ public class HandleCondition {
 					fitConditions[i] = integrValue < Integer.parseInt(conditionsArray[i].getValue());
 					break;
 				case '>':
-					if(!value.equalsIgnoreCase("null")){
+					if (!value.equalsIgnoreCase("null")) {
 						integrValue = Integer.parseInt(value);
 						fitConditions[i] = integrValue > Integer.parseInt(conditionsArray[i].getValue());
-					}else{
-						fitConditions[i]=false;
+					} else {
+						fitConditions[i] = false;
 					}
 					break;
 				}
@@ -115,8 +114,5 @@ public class HandleCondition {
 		return false;
 
 	}
-
-
-
 
 }

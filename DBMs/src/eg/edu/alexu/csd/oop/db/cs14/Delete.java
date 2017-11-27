@@ -20,8 +20,8 @@ public class Delete extends Statement {
 	private static final Exception SQLClientInfoException = null;
 	private ArrayList<String> columnsNeeded;
 	private boolean deleteAllTable;
-	private int result ;
-	private HandleCondition handler ;
+	private int result;
+	private HandleCondition handler;
 
 	public Delete(String[] querySplited, String currentDataBase, Object returnObject) {
 		super(querySplited, currentDataBase, returnObject);
@@ -54,7 +54,7 @@ public class Delete extends Statement {
 			handler = new HandleCondition();
 			handler.setConditionsArray(null);
 			file = CheckTable(strings[1].trim());
-			if(file == null){
+			if (file == null) {
 				this.returnObject = 0;
 				return 0;
 			}
@@ -62,10 +62,10 @@ public class Delete extends Statement {
 		}
 		Iterate(file);
 		super.returnObject = result;
-		return result ;
-
+		return result;
 
 	}
+
 	private void Iterate(File file) throws XMLStreamException, IOException {
 		boolean writeColumns = false;
 		boolean writeElement = false;
@@ -76,18 +76,18 @@ public class Delete extends Statement {
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 		final FileOutputStream output = new FileOutputStream(new File(temp));
-		final XMLEventWriter writer = factory.createXMLEventWriter(output , "ISO-8859-1");
+		final XMLEventWriter writer = factory.createXMLEventWriter(output, "ISO-8859-1");
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(tempFile));
 
 		while (eventReader.hasNext()) {
 			XMLEvent event = eventReader.nextEvent();
 			switch (event.getEventType()) {
 			case XMLEvent.START_DOCUMENT:
-				writer.add(eventFactory.createStartDocument("ISO-8859-1","1.0"));
+				writer.add(eventFactory.createStartDocument("ISO-8859-1", "1.0"));
 				continue;
 			case XMLEvent.START_ELEMENT:
-				if(event.asStartElement().getName().toString().equals("elements")){
-					if(deleteAllTable){
+				if (event.asStartElement().getName().toString().equals("elements")) {
+					if (deleteAllTable) {
 						writer.add(eventFactory.createStartElement("", null, "elements"));
 						writer.add(eventFactory.createEndElement("", null, "elements"));
 						final StringBuilder st = new StringBuilder();
@@ -105,17 +105,17 @@ public class Delete extends Statement {
 					}
 					break;
 				}
-				/*if(event.asStartElement().getName().toString().equals("element")){
-					writeElement = StartElementConditions(event, writeElement);
-					event = eventReader.nextEvent();
-					continue;
-				}*/
+				/*
+				 * if(event.asStartElement().getName().toString().equals(
+				 * "element")){ writeElement = StartElementConditions(event,
+				 * writeElement); event = eventReader.nextEvent(); continue; }
+				 */
 				if (writeElement) {
 					XMLEvent elementEvent = event;
 					final Map<String, String> elementMap = new HashMap<>();
-					while (elementEvent.getEventType() != XMLEvent.END_ELEMENT ) {
-						//!elementEvent.asEndElement().getName().toString().equalsIgnoreCase("element")
-						if(!elementEvent.isStartElement()){
+					while (elementEvent.getEventType() != XMLEvent.END_ELEMENT) {
+						// !elementEvent.asEndElement().getName().toString().equalsIgnoreCase("element")
+						if (!elementEvent.isStartElement()) {
 							elementEvent = eventReader.nextEvent();
 							continue;
 						}
@@ -125,61 +125,59 @@ public class Delete extends Statement {
 						elementEvent = eventReader.nextEvent();
 						elementEvent = eventReader.nextEvent();
 					}
-					//					final boolean put = checkCondition(elementMap);
+					// final boolean put = checkCondition(elementMap);
 
 					final boolean put = handler.checkCondition(elementMap);
 
-					if(put){
-						result ++ ;
-					}
-					else{
-						writer.add(eventFactory.createStartElement("", null,"element"));
+					if (put) {
+						result++;
+					} else {
+						writer.add(eventFactory.createStartElement("", null, "element"));
 						for (final Map.Entry<String, String> column : elementMap.entrySet()) {
-							writer.add(eventFactory.createStartElement("", null,column.getKey()));
+							writer.add(eventFactory.createStartElement("", null, column.getKey()));
 							writer.add(eventFactory.createCharacters(column.getValue()));
 							writer.add(eventFactory.createEndElement("", null, column.getKey()));
 
 						}
-						writer.add(eventFactory.createEndElement("", null,"element"));
+						writer.add(eventFactory.createEndElement("", null, "element"));
 					}
 					elementEvent = eventReader.nextEvent();
 					event = elementEvent;
-					try{
-						if(!event.asStartElement().getName().toString().equals("element")){
-							writeElement = false ;
-						}
-						else{
+					try {
+						if (!event.asStartElement().getName().toString().equals("element")) {
+							writeElement = false;
+						} else {
 							continue;
 						}
-					}
-					catch (final Exception e) {
+					} catch (final Exception e) {
 						// TODO: handle exception
 					}
 					break;
 				}
 				writeElement = StartElementConditions(event, writeElement);
-				if(writeElement){
+				if (writeElement) {
 					continue;
 				}
-				//writer.add(event);
-				//use or not
-				//	writeColumns = StartColumnsConditions(event, writeColumns);
+				// writer.add(event);
+				// use or not
+				// writeColumns = StartColumnsConditions(event, writeColumns);
 
 				break;
 
 			case XMLEvent.END_ELEMENT:
-				/*if (event.asEndElement().getName().toString().equalsIgnoreCase("element")) {
-
-					writeElement = false;
-
-				} else */if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
+				/*
+				 * if
+				 * (event.asEndElement().getName().toString().equalsIgnoreCase(
+				 * "element")) {
+				 * 
+				 * writeElement = false;
+				 * 
+				 * } else
+				 */if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
 					writeColumns = false;
 				}
 
 				break;
-
-
-
 
 			}
 
@@ -190,11 +188,7 @@ public class Delete extends Statement {
 		output.close();
 		tempFile.delete();
 
-
 	}
-
-
-
 
 	private boolean StartElementConditions(XMLEvent event, boolean writeElement) {
 
@@ -210,7 +204,7 @@ public class Delete extends Statement {
 		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
 			this.returnObject = 0;
-			//throw SQLClientInfoException;
+			// throw SQLClientInfoException;
 			return null;
 		}
 
