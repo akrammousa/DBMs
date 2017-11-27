@@ -51,10 +51,14 @@ public class Create extends Statement {
 		columns = columns.replaceAll("\\);", "");
 		final ArrayList<String> ColumnNames = new ArrayList<>();
 
+		
 		String[] strings = columns.split("\\(");
 
 		final String tableName = strings[0].trim();
 
+		if(strings[1].trim().equals("")){
+			throw SQLException;
+		}
 		final File table = CheckTable(tableName);
 		if (result && table != null) {
 			try {
