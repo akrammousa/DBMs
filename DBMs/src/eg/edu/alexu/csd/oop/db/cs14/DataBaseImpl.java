@@ -64,8 +64,9 @@ public class DataBaseImpl implements Database {
 			statment.createStatement();
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
-			 throw new RuntimeException( "ex qu: " + query);
-//			e.printStackTrace();
+//			 throw new RuntimeException( "ex qu: " + query);
+
+			e.printStackTrace();
 		}
 //		 throw new RuntimeException( "ex qu: " + query);
 

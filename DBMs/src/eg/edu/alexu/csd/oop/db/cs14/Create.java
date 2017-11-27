@@ -106,7 +106,7 @@ public class Create extends Statement {
 		File db  = new File(super.currentDataBase);
 		File table = new File(super.currentDataBase + "\\" + tableName + ".xml");
 		if (db.exists() && table.exists()) {
-			result = false;
+			result = true;
 		} else if(db.exists()) {
 			table.createNewFile();
 			result = true;

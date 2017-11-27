@@ -30,7 +30,7 @@ public class Select extends Statement {
 		final StringBuilder st = new StringBuilder();
 		for (int i = 1; i < querySplited.length; i++) {
 
-			st.append(querySplited[i]);
+			st.append(querySplited[i] +" ");
 
 		}
 		final String query = st.toString();

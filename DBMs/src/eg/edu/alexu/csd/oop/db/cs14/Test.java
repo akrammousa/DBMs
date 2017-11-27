@@ -14,9 +14,10 @@ public class Test {
 
 		DataBaseImpl test = new DataBaseImpl();
 
-		test.executeQuery("create table test1(id int, name varchar , photo int );");
-		test.executeUpdateQuery("UPDATE test1 SET name = 'youmna' "
-				+ "WHERE id = 72;");
+		test.createDatabase("csed", false);
+		test.executeStructureQuery("create table table_name13 (column_name1 int, coluMN_NAME2 int , column_Name3 int );");
+		test.executeUpdateQuery("SELECT column_name1 FROM table_name13 WHERE coluMN_NAME2 < 5");
+		//test.executeStructureQuery("DROP DATABASE csed");
 		
 	}
 
