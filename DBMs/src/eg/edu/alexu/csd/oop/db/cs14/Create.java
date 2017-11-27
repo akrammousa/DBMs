@@ -25,7 +25,7 @@ public class Create extends Statement {
 				final File file = new File("DataBases");
 				file.mkdir();
 			}
-			final File f = new File(super.currentDataBase);
+			final File f = new File("DataBases" + "\\" + super.querySplited[2] + ".xml");
 			final boolean temp = f.mkdir();
 			this.returnObject = temp;
 			return (temp);
