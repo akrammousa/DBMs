@@ -43,12 +43,12 @@ public class Update extends Statement {
 		File file = null;
 		String[] strings = query.toLowerCase().split("set", 2);
 		file = CheckTable(strings[0].trim());
-		if (file == null) {
+		if (file == null || file.length() == 0) {
 			this.returnObject = 0;
 			return 0;
 		}
 		final String temp = file.getAbsolutePath();
-		final File tempFile = new File(super.currentDataBase + "\\" + "tem" + ".xml");
+		final File tempFile = new File(this.currentDataBase + "\\" + "tem" + ".xml");
 		System.out.println(file.renameTo(tempFile));
 
 		if (strings[1].toLowerCase().contains("where")) {
@@ -64,7 +64,7 @@ public class Update extends Statement {
 		}
 
 		Iterate(tempFile, temp);
-		super.returnObject = results;
+		this.returnObject = results;
 		return results;
 	}
 
@@ -192,7 +192,7 @@ public class Update extends Statement {
 	}
 
 	private File CheckTable(String trim) throws Exception {
-		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
+		final File file = new File(this.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
 			this.returnObject = 0;
 			// throw SQLClientInfoException;

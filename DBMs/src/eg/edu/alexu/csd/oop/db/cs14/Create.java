@@ -21,22 +21,30 @@ public class Create extends Statement {
 	@Override
 	public Object excute() throws Exception {
 		if (super.querySplited[1].equalsIgnoreCase("database")) {
-			System.out.println(super.currentDataBase);
+			if (!new File("DataBases").exists()) {
+				final File file = new File("DataBases");
+				file.mkdir();
+			}
 			final File f = new File(super.currentDataBase);
 			final boolean temp = f.mkdir();
 			this.returnObject = temp;
 			return (temp);
 		} else if (super.querySplited[1].equalsIgnoreCase("table")) {
-			System.out.println(Arrays.copyOfRange(super.querySplited, 2, super.querySplited.length - 1).toString());
+
+		
 			final StringBuilder st = new StringBuilder();
 			for (int i = 2; i < querySplited.length; i++) {
 				st.append(querySplited[i] + " ");
+			}
+			if (this.currentDataBase == null || this.currentDataBase == "DataBases") {
+				this.returnObject = false;
+				return false;
 			}
 			final String test = st.toString();
 			return createTable(test);
 
 		}
-		return false;
+		return true;
 	}
 
 	private boolean createTable(String columns) throws Exception {
@@ -48,11 +56,7 @@ public class Create extends Statement {
 		final String tableName = strings[0].trim();
 
 		final File table = CheckTable(tableName);
-		if (result == false) {
-			super.returnObject = result;
-			return result;
-		}
-		if (result) {
+		if (result && table != null) {
 			try {
 				final FileWriter stringWriter = new FileWriter(table);
 				final XMLOutputFactory factory = XMLOutputFactory.newInstance();
@@ -67,7 +71,7 @@ public class Create extends Statement {
 
 				for (int i = 0; i < strings.length; i++) {
 
-					final String[] column = strings[i].split(" ", 2);
+					final String[] column = strings[i].trim().split(" ", 2);
 
 					final String name = column[0].trim();
 					if (!ColumnNames.contains(name)) {
@@ -91,19 +95,23 @@ public class Create extends Statement {
 			}
 
 		}
-		super.returnObject = result;
+		this.returnObject = result;
 		return result;
 
 	}
 
 	private File CheckTable(String tableName) throws Exception {
 		// check from the keywords
-		final File table = new File(super.currentDataBase + "\\" + tableName + ".xml");
-		if (table.exists()) {
+		File db  = new File(super.currentDataBase);
+		File table = new File(super.currentDataBase + "\\" + tableName + ".xml");
+		if (db.exists() && table.exists()) {
 			result = false;
-		} else {
+		} else if(db.exists()) {
 			table.createNewFile();
 			result = true;
+		}else {
+			result = false ;
+			table = null ;
 		}
 		return table;
 

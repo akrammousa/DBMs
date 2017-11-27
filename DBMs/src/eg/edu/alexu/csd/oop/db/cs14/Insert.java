@@ -39,16 +39,16 @@ public class Insert extends Statement {
 		final String tem = st.toString();
 		final String[] strings = tem.split("\\(", 2);
 		final File file = CheckTable(strings[0].trim());
-		if (file == null) {
+		if (file == null || file.length() == 0) {
 			this.returnObject = 0;
 			return returnObject;
 		}
 		final String temp = file.getPath();
-		final File tempFile = new File(super.currentDataBase + "\\" + "tempo" + ".xml");
+		final File tempFile = new File(this.currentDataBase + "\\" + "tempo" + ".xml");
 		file.renameTo(tempFile);
 		st = new StringBuilder();
 
-		String pro = strings[1];
+		String pro = strings[1].trim();
 		pro = NewString(pro);
 		Map<String, String> mapColumns = new HashMap<>();
 		mapColumns = GetColumns(pro.toLowerCase().split("values", 2));
@@ -115,7 +115,7 @@ public class Insert extends Statement {
 		tempFile.delete();
 
 		final int rowsAdded = 1;
-		super.returnObject = rowsAdded;
+		this.returnObject = rowsAdded;
 		return rowsAdded;
 	}
 
@@ -124,6 +124,7 @@ public class Insert extends Statement {
 		pro = pro.replaceAll("\\)", " ");
 		pro = pro.replaceAll(";", " ");
 		pro = pro.replaceAll("\\'", " ");
+		pro = pro.trim();
 
 		return pro;
 	}
@@ -145,9 +146,8 @@ public class Insert extends Statement {
 	}
 
 	private File CheckTable(String trim) throws Exception {
-		final File file = new File(super.currentDataBase + "\\" + trim + ".xml");
+		final File file = new File(this.currentDataBase + "\\" + trim + ".xml");
 		if (!file.exists()) {
-			this.returnObject = 0;
 			// throw SQLClientInfoException;
 			return null;
 		}

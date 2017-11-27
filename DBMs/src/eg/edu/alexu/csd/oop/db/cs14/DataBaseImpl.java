@@ -11,10 +11,7 @@ public class DataBaseImpl implements Database {
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
 
-		if (!new File("DataBases").exists()) {
-			final File file = new File("DataBases");
-			file.mkdir();
-		}
+		
 		this.currentDataBase = "DataBases" + "\\" + databaseName;
 		final File f = new File(this.currentDataBase);
 		if (f.exists()) {
@@ -43,19 +40,18 @@ public class DataBaseImpl implements Database {
 		 */
 		// this.currentDataBase = f.getPath();
 
-		if (currentDataBase.equalsIgnoreCase("DataBases") || currentDataBase == null) {
-			return false;
-		}
+		
 
 		final ChooseStatement statment = new ChooseStatement(query, currentDataBase, null);
 		try {
 			statment.createStatement();
+			System.out.println(statment.returnObject);
 			return (boolean) statment.returnObject;
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// throw new RuntimeException( "Ex struct: " + query);
+//		 throw new RuntimeException( "Ex struct: " + query);
 
 		return false;
 	}
@@ -70,7 +66,7 @@ public class DataBaseImpl implements Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// throw new RuntimeException( "ex qu: " + query);
+//		 throw new RuntimeException( "ex qu: " + query);
 
 		return (Object[][]) statment.returnObject;
 	}
@@ -89,9 +85,9 @@ public class DataBaseImpl implements Database {
 		try {
 			temp = (int) statment.returnObject;
 		} catch (final Exception e) {
-			// throw new RuntimeException(query);
+			 throw new RuntimeException(query);
 		}
-		// throw new RuntimeException( "update db: " + query);
+
 
 		return temp;
 	}

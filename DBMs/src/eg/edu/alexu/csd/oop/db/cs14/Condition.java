@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.db.cs14;
 
+
 public class Condition {
 	private final String column;
 	private final String value;

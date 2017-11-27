@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.db.cs14;
 
+
 import java.lang.reflect.Constructor;
 import java.util.LinkedList;
 
@@ -13,7 +14,7 @@ public class ChooseStatement {
 		this.query = this.query.replaceAll("\\s+", " ");
 		query = query.replaceAll(";", "");
 		query = query.replaceAll("'", "");
-		final String[] querySplited = query.split(" ");
+		final String[] querySplited = query.trim().split(" ");
 		Statement instance = null;
 		// try contains instead of the loop
 		for (int i = 0; i < supportedStatements.size(); i++) {

@@ -17,8 +17,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
 public class Delete extends Statement {
-	private static final Exception SQLClientInfoException = null;
-	private ArrayList<String> columnsNeeded;
 	private boolean deleteAllTable;
 	private int result;
 	private HandleCondition handler;
@@ -54,7 +52,7 @@ public class Delete extends Statement {
 			handler = new HandleCondition();
 			handler.setConditionsArray(null);
 			file = CheckTable(strings[1].trim());
-			if (file == null) {
+			if (file == null || file.length() == 0) {
 				this.returnObject = 0;
 				return 0;
 			}
