@@ -109,7 +109,7 @@ public class Update extends Statement {
 					final boolean put = handler.checkCondition(elementMap);
 
 					if (put) {
-//						results++;
+						results++;
 						elementMap = updateMap(elementMap);
 					}
 

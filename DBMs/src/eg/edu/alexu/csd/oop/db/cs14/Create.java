@@ -25,6 +25,7 @@ public class Create extends Statement {
 				final File file = new File("DataBases");
 				file.mkdir();
 			}
+			currentDataBase = querySplited[2].trim();
 			final File f = new File(super.currentDataBase);
 			final boolean temp = f.mkdir();
 			this.returnObject = temp;

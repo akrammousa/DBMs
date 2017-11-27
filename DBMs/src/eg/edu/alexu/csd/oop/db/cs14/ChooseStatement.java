@@ -14,6 +14,7 @@ public class ChooseStatement {
 		this.query = this.query.replaceAll("\\s+", " ");
 		query = query.replaceAll(";", "");
 		query = query.replaceAll("'", "");
+		query = query.trim();
 		final String[] querySplited = query.trim().split(" ");
 		Statement instance = null;
 		// try contains instead of the loop
