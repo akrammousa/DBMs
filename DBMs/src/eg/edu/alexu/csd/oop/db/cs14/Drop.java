@@ -4,8 +4,8 @@ import java.io.File;
 
 public class Drop extends Statement  {
 
-	public Drop(String[] querySplited, String currentDataBase) {
-		super(querySplited, currentDataBase);
+	public Drop(String[] querySplited, String currentDataBase, Object returnObject) {
+		super(querySplited, currentDataBase,returnObject);
 		// TODO Auto-generated constructor stub
 	}
 

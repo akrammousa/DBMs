@@ -2,7 +2,6 @@ package eg.edu.alexu.csd.oop.db.cs14;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,8 +23,8 @@ public class Delete extends Statement {
 	private int result ;
 	private HandleCondition handler ;
 
-	public Delete(String[] querySplited, String currentDataBase) {
-		super(querySplited, currentDataBase);
+	public Delete(String[] querySplited, String currentDataBase, Object returnObject) {
+		super(querySplited, currentDataBase, returnObject);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -71,7 +70,7 @@ public class Delete extends Statement {
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		FileOutputStream output = new FileOutputStream(new File(temp));
+		final FileOutputStream output = new FileOutputStream(new File(temp));
 		final XMLEventWriter writer = factory.createXMLEventWriter(output);
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(tempFile));
 

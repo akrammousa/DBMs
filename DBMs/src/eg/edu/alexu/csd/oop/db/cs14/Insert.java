@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -19,8 +20,8 @@ public class Insert extends Statement {
 	private static final Exception SQLException = null;
 	private final ArrayList<String> TableColumns = new ArrayList<>();
 
-	public Insert(String[] querySplited, String currentDataBase) {
-		super(querySplited, currentDataBase);
+	public Insert(String[] querySplited, String currentDataBase, Object returnObject) {
+		super(querySplited, currentDataBase,returnObject);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -46,7 +47,7 @@ public class Insert extends Statement {
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		FileOutputStream output = new FileOutputStream(new File(temp));
+		final FileOutputStream output = new FileOutputStream(new File(temp));
 		final XMLEventWriter writer = factory.createXMLEventWriter(output);
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(tempFile));
 
@@ -93,8 +94,8 @@ public class Insert extends Statement {
 		writer.close();
 		output.close();
 		tempFile.delete();
-		
-	
+
+
 		return 1 ;
 	}
 

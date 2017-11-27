@@ -2,13 +2,10 @@ package eg.edu.alexu.csd.oop.db.cs14;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.stream.XMLEventFactory;
@@ -27,14 +24,14 @@ public class Update extends Statement {
 	ArrayList<TwoStrings> values;
 	private static final Exception SQLClientInfoException = null;
 
-	public Update(String[] querySplited, String currentDataBase) {
-		super(querySplited, currentDataBase);
+	public Update(String[] querySplited, String currentDataBase, Object returnObject) {
+		super(querySplited, currentDataBase,returnObject);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Object excute() throws Exception {
- 
+
 		results = 0;
 		final StringBuilder st = new StringBuilder();
 		for (int i = 1; i < querySplited.length; i++) {
@@ -46,10 +43,10 @@ public class Update extends Statement {
 		File file = null;
 		String[] strings = query.toLowerCase().split("set", 2);
 		file = CheckTable(strings[0].trim());
-		String temp = file.getAbsolutePath();
+		final String temp = file.getAbsolutePath();
 		final File tempFile = new File(super.currentDataBase + "\\" + "tem" + ".xml");
 		System.out.println(file.renameTo(tempFile));
-		
+
 		if (strings[1].toLowerCase().contains("where")) {
 			strings = strings[1].split("where");
 			handler = new HandleCondition(strings[1].trim());
@@ -70,22 +67,22 @@ public class Update extends Statement {
 	private void Iterate(File file , String temp) throws XMLStreamException, IOException {
 		boolean writeColumns = false;
 		boolean writeElement = false;
-		 
+
 		final XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		final XMLInputFactory inFactory = XMLInputFactory.newInstance();
 		final XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-		FileOutputStream output = new FileOutputStream(new File(temp));
+		final FileOutputStream output = new FileOutputStream(new File(temp));
 		final XMLEventWriter writer = factory.createXMLEventWriter(output);
 		final XMLEventReader eventReader = inFactory.createXMLEventReader(new FileInputStream(file));
 
 		while (eventReader.hasNext()) {
-			XMLEvent event = eventReader.nextEvent();
+			final XMLEvent event = eventReader.nextEvent();
 			if (!writeElement){
-			writer.add(event);
+				writer.add(event);
 			}
 			switch (event.getEventType()) {
 
-			
+
 			case XMLEvent.START_ELEMENT:
 				if (writeElement) {
 					XMLEvent elementEvent = event;
@@ -102,7 +99,7 @@ public class Update extends Statement {
 						elementEvent = eventReader.nextEvent();
 						elementEvent = eventReader.nextEvent();
 					}
-					
+
 					final boolean put = handler.checkCondition(elementMap);
 
 					if (put) {
@@ -126,31 +123,31 @@ public class Update extends Statement {
 				 * if
 				 * (event.asEndElement().getName().toString().equalsIgnoreCase(
 				 * "element")) {
-				 * 
+				 *
 				 * writeElement = false;
-				 * 
+				 *
 				 * } else
 				 */if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
-					writeColumns = false;
-				}
+					 writeColumns = false;
+				 }
 
-				break;
+				 break;
 
 			}
-			
+
 
 		}
 		writer.close();
 		output.close();
 		file.delete();
-		
+
 
 	}
 
 	private void WriteElement(Map<String, String> elementMap, XMLEventWriter writer, XMLEventFactory eventFactory)
 			throws XMLStreamException {
 
-		for (Map.Entry<String, String> element : elementMap.entrySet()) {
+		for (final Map.Entry<String, String> element : elementMap.entrySet()) {
 			writer.add(eventFactory.createStartElement("", null, element.getKey()));
 			writer.add(eventFactory.createCharacters(element.getValue()));
 			writer.add(eventFactory.createEndElement("", null, element.getKey()));
@@ -169,11 +166,11 @@ public class Update extends Statement {
 	}
 
 	private ArrayList<TwoStrings> ValuesNeeded(String columnsValues) {
-		ArrayList<TwoStrings> list = new ArrayList<>();
-		String[] strings = columnsValues.split(",");
+		final ArrayList<TwoStrings> list = new ArrayList<>();
+		final String[] strings = columnsValues.split(",");
 		for (int i = 0; i < strings.length; i++) {
-			String[] values = strings[i].trim().split("=", 2);
-			TwoStrings needed = new TwoStrings(values[0], values[1]);
+			final String[] values = strings[i].trim().split("=", 2);
+			final TwoStrings needed = new TwoStrings(values[0], values[1]);
 			list.add(needed);
 		}
 

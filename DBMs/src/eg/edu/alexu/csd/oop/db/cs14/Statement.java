@@ -4,14 +4,16 @@ public class Statement {
 
 	String[] querySplited;
 	String currentDataBase;
-	public Statement(String[] querySplited, String currenrDataBase) {
+	Object returnObject;
+	public Statement(String[] querySplited, String currenrDataBase, Object returnObject) {
 		super();
 		this.querySplited = querySplited;
 		this.currentDataBase = currenrDataBase;
+		this.returnObject = returnObject;
 	}
 
 	public Object excute() throws Exception {
-		
+
 		return null ;
 	}
 }

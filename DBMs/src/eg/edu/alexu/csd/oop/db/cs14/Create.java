@@ -13,8 +13,8 @@ public class Create extends Statement {
 	private boolean result;
 	private static final Exception SQLException = null;
 
-	public Create(String[] querySplited, String currentDataBase) {
-		super(querySplited, currentDataBase);
+	public Create(String[] querySplited, String currentDataBase, Object returnObject) {
+		super(querySplited, currentDataBase,returnObject);
 	}
 
 	@Override
@@ -82,6 +82,7 @@ public class Create extends Statement {
 			}
 
 		}
+		super.returnObject = result;
 		return result;
 
 	}

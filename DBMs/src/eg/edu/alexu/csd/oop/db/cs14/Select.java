@@ -20,8 +20,8 @@ public class Select extends Statement {
 	private final ArrayList<Map<String, String>> Results = new ArrayList<>();
 	private HandleCondition handler ;
 
-	public Select(String[] querySplited, String currentDataBase) {
-		super(querySplited, currentDataBase);
+	public Select(String[] querySplited, String currentDataBase,Object returnObject) {
+		super(querySplited, currentDataBase,returnObject);
 	}
 
 	@Override
