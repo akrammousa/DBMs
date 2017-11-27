@@ -26,13 +26,12 @@ public class Update extends Statement {
 
 	public Update(String[] querySplited, String currentDataBase, Object returnObject) {
 		super(querySplited, currentDataBase,returnObject);
+		this.results=0;
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Object excute() throws Exception {
-
-		results = 0;
 		final StringBuilder st = new StringBuilder();
 		for (int i = 1; i < querySplited.length; i++) {
 
@@ -60,7 +59,7 @@ public class Update extends Statement {
 		}
 
 		Iterate(tempFile , temp);
-
+		super.returnObject = results;
 		return results ;
 	}
 

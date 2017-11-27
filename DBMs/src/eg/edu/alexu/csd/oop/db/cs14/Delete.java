@@ -57,6 +57,7 @@ public class Delete extends Statement {
 
 		}
 		Iterate(file);
+		super.returnObject = result;
 		return result ;
 
 

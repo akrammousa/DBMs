@@ -31,10 +31,10 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public boolean executeStructureQuery(String query) {
-		final ChooseStatement statment = new ChooseStatement(query, currentDataBase);
+		final ChooseStatement statment = new ChooseStatement(query, currentDataBase,null);
 		try {
 			statment.createStatement();
-			return true;
+			return (boolean) statment.returnObject;
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -44,26 +44,34 @@ public class DataBaseImpl implements Database {
 
 	@Override
 	public Object[][] executeQuery(String query) throws SQLException {
-		final ChooseStatement statment = new ChooseStatement(query, currentDataBase);
+		final ChooseStatement statment = new ChooseStatement(query, currentDataBase,null);
 		try {
 			statment.createStatement();
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null ;
+		return (Object[][]) statment.returnObject ;
 	}
 
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
-		final ChooseStatement statment = new ChooseStatement(query, currentDataBase);
+		final ChooseStatement statment = new ChooseStatement(query, currentDataBase,null);
 		try {
 			statment.createStatement();
 		} catch (final Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return 0;
+		int temp = 100;
+
+		try {
+			temp = (int) statment.returnObject;
+
+		} catch (final Exception e) {
+			//throw new RuntimeException(query);
+		}
+		return temp;
 	}
 
 }

@@ -25,7 +25,7 @@ public class Select extends Statement {
 	}
 
 	@Override
-	public Object excute() throws Exception {
+	public Object[][] excute() throws Exception {
 		final StringBuilder st = new StringBuilder();
 		for (int i = 1; i < querySplited.length; i++) {
 
@@ -37,7 +37,8 @@ public class Select extends Statement {
 		if (strings[0].trim().equals("*")) {
 			columnsNeeded = null;
 		} else {
-			columnsNeeded.addAll(Arrays.asList(strings[0].split(",")));
+			final String[] test = strings[0].split(",");
+			columnsNeeded= new ArrayList<> (Arrays.asList(test));
 		}
 		File file = null;
 		if (strings[1].toLowerCase().contains("where")) {
@@ -54,8 +55,29 @@ public class Select extends Statement {
 
 		}
 		Iterate(file);
-		return Results ;
+		super.returnObject = ReturnArray();
+		return (Object[][]) super.returnObject ;
 
+	}
+
+	private Object[][] ReturnArray() {
+		Object[][] returnArray = new Object[Results.size()][];
+		if(Results.size()!=0){
+			final int numOfColumns = Results.get(0).size();
+			returnArray = new Object[Results.size()][numOfColumns];
+			for (int i = 0; i < Results.size(); i++) {
+				Map<String, String> elementMap = new HashMap<>();
+				elementMap = Results.get(i);
+				for (int j = 0; j < numOfColumns; j++) {
+					for (final Map.Entry<String, String> entry : elementMap.entrySet())
+					{
+						returnArray[i][j] = entry.getValue();
+						j++;
+					}
+				}
+			}
+		}
+		return returnArray;
 	}
 
 	private void Iterate(File file) throws FileNotFoundException, XMLStreamException {
@@ -87,9 +109,15 @@ public class Select extends Statement {
 					//					final boolean put = checkCondition(elementMap);
 
 					final boolean put = handler.checkCondition(elementMap);
-
+					final Map<String, String> tempMap = new HashMap<>();
 					if(put){
-						Results.add(elementMap);
+						for (final Map.Entry<String, String> entry : elementMap.entrySet())
+						{
+							if (columnsNeeded.contains(entry.getKey())){
+								tempMap.put(entry.getKey(), entry.getValue());
+							}
+						}
+						Results.add(tempMap);
 					}
 					writeElement = false ;
 				}

@@ -13,12 +13,16 @@ public class Drop extends Statement  {
 	public Object excute() throws Exception {
 		if (super.querySplited[1].equalsIgnoreCase("database")) {
 			final File f = new File(currentDataBase);
-			return (deleteDir(f));
+			final boolean result = deleteDir(f);
+			super.returnObject = result;
+			return (result);
 		} else if (super.querySplited[1].equalsIgnoreCase("table")) {
 
 			final File f = new File(super.currentDataBase +
 					"\\" + super.querySplited[2] +".xml");
-			return(f.delete());
+			final boolean result = deleteDir(f);
+			super.returnObject = result;
+			return(result);
 
 		}
 		return false ;

@@ -8,6 +8,7 @@ public class ChooseStatement {
 	protected String query;
 	protected final String dataBase;
 	public LinkedList<Class<? extends Statement>> supportedStatements = new LinkedList<Class<? extends Statement>>();
+	protected Object returnObject;
 
 
 	public void createStatement() throws Exception {
@@ -23,8 +24,8 @@ public class ChooseStatement {
 							.get(i)
 							.getSimpleName())) {
 				try {
-					final Constructor<? extends Statement> constructor = supportedStatements.get(i).getConstructor(String[].class, String.class);
-					instance = constructor.newInstance(querySplited, dataBase);
+					final Constructor<? extends Statement> constructor = supportedStatements.get(i).getConstructor(String[].class, String.class, Object.class);
+					instance = constructor.newInstance(querySplited, dataBase,null);
 					break;
 				} catch (final Exception e) {
 					e.printStackTrace();
@@ -32,13 +33,15 @@ public class ChooseStatement {
 			}
 		}
 		instance.excute();
+		this.returnObject = instance.returnObject;
 
 	}
 
-	public ChooseStatement(String query, String dataBase) {
+	public ChooseStatement(String query, String dataBase, Object returnObject) {
 		super();
 		this.query = query;
 		this.dataBase = dataBase;
+		this.returnObject = returnObject;
 		supportedStatements.add(Create.class);
 		supportedStatements.add(Drop.class);
 		supportedStatements.add(Insert.class);

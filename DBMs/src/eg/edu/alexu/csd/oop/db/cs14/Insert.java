@@ -95,8 +95,9 @@ public class Insert extends Statement {
 		output.close();
 		tempFile.delete();
 
-
-		return 1 ;
+		final int rowsAdded = 1;
+		super.returnObject = rowsAdded;
+		return rowsAdded ;
 	}
 
 	private String NewString(String pro) {
