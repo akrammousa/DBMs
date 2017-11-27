@@ -109,7 +109,7 @@ public class Update extends Statement {
 					final boolean put = handler.checkCondition(elementMap);
 
 					if (put) {
-						results++;
+//						results++;
 						elementMap = updateMap(elementMap);
 					}
 
@@ -125,15 +125,7 @@ public class Update extends Statement {
 				break;
 
 			case XMLEvent.END_ELEMENT:
-				/*
-				 * if
-				 * (event.asEndElement().getName().toString().equalsIgnoreCase(
-				 * "element")) {
-				 *
-				 * writeElement = false;
-				 *
-				 * } else
-				 */if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
+				if (event.asEndElement().getName().toString().equalsIgnoreCase("columns")) {
 					writeColumns = false;
 				}
 
